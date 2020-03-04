@@ -7,6 +7,36 @@ import com.github.bryanser.kcontextattribute.attribute.DamageEventContext
 import org.bukkit.ChatColor
 import org.bukkit.entity.LivingEntity
 
+object PhysicalDamage : Damage(
+        "Physical",
+        "物理",
+        1
+)
+
+object FireDamage : Damage(
+        "Fire",
+        "火焰",
+        20
+)
+
+object BloodDamage : Damage(
+        "Blood",
+        "血之",
+        20
+)
+
+object LightningDamage : Damage(
+        "Lightning",
+        "闪电",
+        20
+)
+
+object TrueDamage : Damage(
+        "True",
+        "真实",
+        100
+)
+
 class DamageContext(ent: LivingEntity, val dmg: Damage) : AttributeContext(ent) {
     var damage: Double = 0.0
     var defence: Double = 0.0
@@ -17,6 +47,9 @@ class DamageContext(ent: LivingEntity, val dmg: Damage) : AttributeContext(ent) 
     }
 
     override fun toString(): String {
+        if(dmg == TrueDamage){
+            return "§a§l${dmg.displayName}  伤害: ${String.format("%.2f", damage)}"
+        }
         return "§a§l${dmg.displayName}  伤害: ${String.format("%.2f", damage)}, 防御: ${String.format("%.2f", defence)}"
     }
 
@@ -57,5 +90,14 @@ abstract class Damage(
     }
 
     override fun onDamage(ctx: DamageEventContext) {
+        var dmg = ctx.damager.with(this) {
+            damage
+        } - ctx.entity.with(this) {
+            defence
+        }
+        if (dmg < 0) {
+            dmg = 0.0
+        }
+        ctx.damage += dmg
     }
 }

@@ -7,7 +7,7 @@ class DamageEventContext(
         val entity: EntityContext,
         val event: EntityDamageByEntityEvent
 ) {
-    var damage = event.damage
+    var damage = 0.0 //特别设定
 
 }
 

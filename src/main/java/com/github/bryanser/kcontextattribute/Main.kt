@@ -1,6 +1,7 @@
 package com.github.bryanser.kcontextattribute
 
 import com.github.bryanser.kcontextattribute.attribute.ContextManager
+import com.github.bryanser.kcontextattribute.impl.*
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -10,6 +11,12 @@ class Main : JavaPlugin() {
 
     override fun onLoad() {
         Plugin = this
+        ContextManager.register(PhysicalDamage)
+        ContextManager.register(BloodDamage)
+        ContextManager.register(FireDamage)
+        ContextManager.register(LightningDamage)
+        ContextManager.register(TrueDamage)
+        ContextManager.register(Crit)
     }
 
     override fun onEnable() {

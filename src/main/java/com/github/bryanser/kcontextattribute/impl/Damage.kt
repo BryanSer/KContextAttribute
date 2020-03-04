@@ -3,6 +3,7 @@ package com.github.bryanser.kcontextattribute.impl
 import com.github.bryanser.kcontextattribute.attribute.Attribute
 import com.github.bryanser.kcontextattribute.attribute.AttributeContext
 import com.github.bryanser.kcontextattribute.attribute.DamageAttribute
+import com.github.bryanser.kcontextattribute.attribute.DamageEventContext
 import org.bukkit.ChatColor
 import org.bukkit.entity.LivingEntity
 
@@ -52,4 +53,9 @@ abstract class Damage(
         }
     }
 
+    override fun init() {
+    }
+
+    override fun onDamage(ctx: DamageEventContext) {
+    }
 }

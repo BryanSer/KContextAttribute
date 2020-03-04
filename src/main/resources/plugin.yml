@@ -1,0 +1,4 @@
+name: KContextAttribute
+version: ${project.version}
+main: com.github.bryanser.kcontextattribute.Main
+depend: [BrAPI]

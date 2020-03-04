@@ -2,3 +2,8 @@ name: KContextAttribute
 version: ${project.version}
 main: com.github.bryanser.kcontextattribute.Main
 depend: [BrAPI]
+commands:
+    KContextAttribute:
+        aliases: [kca,ka]
+        usage: |
+            §6/<command> seeme >> 查看自身属性

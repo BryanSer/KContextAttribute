@@ -83,6 +83,7 @@ object ContextManager : Listener {
                 }
             }
         }
+        evt.damage = ctx.damage
     }
 
     @EventHandler

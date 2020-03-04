@@ -7,6 +7,7 @@ class DamageEventContext(
         val entity: EntityContext,
         val event: EntityDamageByEntityEvent
 ) {
+    var damage = event.damage
 
 }
 

@@ -1,10 +1,6 @@
 package com.github.bryanser.kcontextattribute.attribute
 
 interface DamageAttribute {
-    fun onDamage(ctx: DamageContext)
+    fun onDamage(ctx: DamageEventContext)
 }
 
-interface PassiveAttribute {
-    val interval: Int
-    fun onPassive(ctx: Context)
-}

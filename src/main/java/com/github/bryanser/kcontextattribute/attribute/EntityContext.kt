@@ -3,7 +3,7 @@ package com.github.bryanser.kcontextattribute.attribute
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 
-class Context(
+class EntityContext(
         val owner: LivingEntity
 ) {
     val contexts = hashMapOf<Attribute<*>, AttributeContext>()
@@ -32,8 +32,8 @@ class Context(
     }
 
 
-    fun copy(): Context {
-        val ctx = Context(owner)
+    fun copy(): EntityContext {
+        val ctx = EntityContext(owner)
         for ((a, ac) in contexts) {
             ctx.contexts[a] = ac.copy()
         }

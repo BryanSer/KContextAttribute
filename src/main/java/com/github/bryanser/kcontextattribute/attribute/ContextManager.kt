@@ -18,8 +18,8 @@ import java.util.*
 object ContextManager : Listener {
     const val MAX_CACHE_TIME = 1000L
     val attributes: MutableList<Attribute<*>> = mutableListOf()
-    val cache = hashMapOf<UUID, Pair<Context, Long>>()
-    val projectileAttribute = hashMapOf<UUID, Context>()
+    val cache = hashMapOf<UUID, Pair<EntityContext, Long>>()
+    val projectileAttribute = hashMapOf<UUID, EntityContext>()
 
     fun register(attr: Attribute<*>) {
         attributes.add(attr)
@@ -46,7 +46,7 @@ object ContextManager : Listener {
         Bukkit.getPluginManager().registerEvents(this, Main.getPlugin())
     }
 
-    fun getContext(entity: LivingEntity, update: Boolean = false): Context {
+    fun getContext(entity: LivingEntity, update: Boolean = false): EntityContext {
         if (!update) {
             val cache = cache[entity.uniqueId]
             if (cache != null) {
@@ -56,7 +56,7 @@ object ContextManager : Listener {
                 }
             }
         }
-        val ctx = Context(entity)
+        val ctx = EntityContext(entity)
         val evt = LoadItemEvent(entity, ctx)
         Bukkit.getPluginManager().callEvent(evt)
         ctx.init(evt.items)
@@ -68,12 +68,12 @@ object ContextManager : Listener {
     fun onDamage(evt: EntityDamageByEntityEvent) {
         val e = evt.entity as? LivingEntity ?: return
         val d = evt.damager
-        val damctx: Context = if (d is Projectile) {
+        val damctx: EntityContext = if (d is Projectile) {
             projectileAttribute[d.uniqueId] ?: return
         } else {
             getContext(d as? LivingEntity ?: return)
         }
-        val ctx = DamageContext(damctx, getContext(e), evt)
+        val ctx = DamageEventContext(damctx, getContext(e), evt)
         for (attr in attributes) {
             if (attr is DamageAttribute) {
                 try {

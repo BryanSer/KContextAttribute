@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack
 
 class LoadItemEvent(
         private val ent: LivingEntity,
-        val context: Context
+        val context: EntityContext
 ) : EntityEvent(ent) {
     var items = mutableListOf<ItemStack>()
 

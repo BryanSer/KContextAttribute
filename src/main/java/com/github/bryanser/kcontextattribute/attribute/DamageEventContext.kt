@@ -2,9 +2,9 @@ package com.github.bryanser.kcontextattribute.attribute
 
 import org.bukkit.event.entity.EntityDamageByEntityEvent
 
-class DamageContext(
-        val damager: Context,
-        val entity: Context,
+class DamageEventContext(
+        val damager: EntityContext,
+        val entity: EntityContext,
         val event: EntityDamageByEntityEvent
 ) {
 

@@ -27,8 +27,9 @@ class EntityContext(
         }
     }
 
-    inline fun <reified AC : AttributeContext, A : Attribute<AC>> with(attr: A, func: AC.() -> Unit) {
-        contexts[attr]?.let { it as? AC }?.func()
+    inline fun <reified AC : AttributeContext, A : Attribute<AC>, R> with(attr: A, func: AC.() -> R): R {
+        return contexts[attr]?.let { it as? AC }?.func()
+                ?: throw IllegalArgumentException("找不到属性${attr.name}")
     }
 
 

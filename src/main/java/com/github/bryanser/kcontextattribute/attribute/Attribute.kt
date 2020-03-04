@@ -1,6 +1,7 @@
 package com.github.bryanser.kcontextattribute.attribute
 
 import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemStack
 
 abstract class Attribute<AC : AttributeContext>(
         val name: String,
@@ -10,7 +11,7 @@ abstract class Attribute<AC : AttributeContext>(
 
     abstract fun createContext(p: LivingEntity): AC
 
-    abstract fun loadAttribute(ctx: AC, lore: List<String>)
+    abstract fun loadAttribute(ctx: AC, lore: List<String>, item:ItemStack)
 
     abstract fun init()
 }

@@ -19,7 +19,7 @@ class EntityContext(
             val lore = im.lore
             for ((attr, ctx) in contexts) {
                 try {
-                    (attr as Attribute<AttributeContext>).loadAttribute(ctx, lore)
+                    (attr as Attribute<AttributeContext>).loadAttribute(ctx, lore, item)
                 } catch (e: Throwable) {
                     e.printStackTrace()
                 }

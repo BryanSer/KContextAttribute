@@ -17,6 +17,7 @@ class Main : JavaPlugin() {
         ContextManager.register(LightningDamage)
         ContextManager.register(TrueDamage)
         ContextManager.register(Crit)
+        ContextManager.register(Vampire)
     }
 
     override fun onEnable() {

@@ -8,43 +8,41 @@ import org.bukkit.ChatColor
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 
-class CritContext(owner: LivingEntity) : AttributeContext(owner) {
+class VampireContext(owner: LivingEntity) : AttributeContext(owner) {
     var chance: Double = 0.0
-    var rate: Double = 2.0
+    var rate: Double = 0.00
 
-    override fun copy(): AttributeContext = CritContext(owner).also {
+    override fun copy(): AttributeContext = VampireContext(owner).also {
         it.chance = chance
         it.rate = rate
     }
 
     override fun toString(): String {
-        return String.format("§6暴击率: %.2f, 暴击伤害倍率: %.2f", chance * 100, rate * 100)
+        return "§c汲取几率: ${String.format("%.2f%", chance * 100)}, 生命汲取: ${String.format("%.2f%", rate * 100)}"
     }
-
 }
 
-object Crit : Attribute<CritContext>(
-        "Crit",
-        "暴击",
-        10
+object Vampire : Attribute<VampireContext>(
+        "Vampire",
+        "吸血",
+        11
 ), DamageAttribute {
-    val chance = "暴击率[：:] *(?<value>[+-][0-9.]+)%".toRegex().toPattern()
-    val rate = "暴击伤害[：:] *(?<value>[+-][0-9.]+)%".toRegex().toPattern()
+    val chance = "汲取几率[：:] *(?<value>[+-][0-9.]+)%".toRegex().toPattern()
+    val rate = "生命汲取[：:] *(?<value>[+-][0-9.]+)%".toRegex().toPattern()
+    override fun createContext(p: LivingEntity): VampireContext = VampireContext(p)
 
-    override fun createContext(p: LivingEntity): CritContext = CritContext(p)
-
-    override fun loadAttribute(ctx: CritContext, lore: List<String>, item: ItemStack) {
+    override fun loadAttribute(ctx: VampireContext, lore: List<String>, item: ItemStack) {
         if (!isWeapon(item)) {
             return
         }
         for (s in lore) {
             val str = ChatColor.stripColor(s)
-            val dm = chance.matcher(str)
+            val dm = Crit.chance.matcher(str)
             if (dm.find()) {
                 val value = dm.group("value")
                 ctx.chance += value.toDouble() / 100.0
             } else {
-                val m = rate.matcher(str)
+                val m = Crit.rate.matcher(str)
                 if (m.find()) {
                     val value = dm.group("value")
                     ctx.rate += value.toDouble() / 100.0
@@ -62,9 +60,16 @@ object Crit : Attribute<CritContext>(
     override fun onDamage(ctx: DamageEventContext) {
         ctx.damager.with(this) {
             if (Math.random() < chance) {
-                ctx.damage *= rate
+                val v = rate * ctx.damage
+                var h = owner.health + v
+                val max = owner.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH).value
+                if (h > max) {
+                    h = max
+                } else if (h < 0) {
+                    h = 0.0
+                }
+                owner.health = h
             }
         }
     }
-
 }

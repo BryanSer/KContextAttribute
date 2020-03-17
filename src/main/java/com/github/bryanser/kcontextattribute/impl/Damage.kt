@@ -5,7 +5,10 @@ import com.github.bryanser.kcontextattribute.attribute.AttributeContext
 import com.github.bryanser.kcontextattribute.attribute.DamageAttribute
 import com.github.bryanser.kcontextattribute.attribute.DamageEventContext
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemStack
+import java.util.*
 
 object PhysicalDamage : Damage(
         "Physical",
@@ -47,7 +50,7 @@ class DamageContext(ent: LivingEntity, val dmg: Damage) : AttributeContext(ent) 
     }
 
     override fun toString(): String {
-        if(dmg == TrueDamage){
+        if (dmg == TrueDamage) {
             return "§a§l${dmg.displayName}  伤害: ${String.format("%.2f", damage)}"
         }
         return "§a§l${dmg.displayName}  伤害: ${String.format("%.2f", damage)}, 防御: ${String.format("%.2f", defence)}"
@@ -69,17 +72,22 @@ abstract class Damage(
 
     override fun createContext(p: LivingEntity): DamageContext = DamageContext(p, this)
 
-    override fun loadAttribute(ctx: DamageContext, lore: List<String>) {
-        for (s in lore) {
-            val str = ChatColor.stripColor(s)
-            val dm = damageKey.matcher(str)
-            if (dm.find()) {
-                val value = dm.group("value")
-                ctx.damage += value.toDouble()
-            } else {
+    override fun loadAttribute(ctx: DamageContext, lore: List<String>, item: ItemStack) {
+        if (isWeapon(item)) {
+            for (s in lore) {
+                val str = ChatColor.stripColor(s)
+                val dm = damageKey.matcher(str)
+                if (dm.find()) {
+                    val value = dm.group("value")
+                    ctx.damage += value.toDouble()
+                }
+            }
+        } else if (isArmor(item)) {
+            for (s in lore) {
+                val str = ChatColor.stripColor(s)
                 val m = defenceKey.matcher(str)
                 if (m.find()) {
-                    val value = dm.group("value")
+                    val value = m.group("value")
                     ctx.defence += value.toDouble()
                 }
             }
@@ -100,4 +108,34 @@ abstract class Damage(
         }
         ctx.damage += dmg
     }
+}
+
+val weapon: Set<Material> by lazy {
+    val set = EnumSet.noneOf(Material::class.java)
+    for (m in Material.values()) {
+        val name = m.name
+        if (name.contains("_SWORD") || name.contains("_AXE") || name.contains("_PICKAXE") || name.contains("_HOE")) {
+            set += m
+        }
+    }
+    set
+}
+val armor: Set<Material> by lazy {
+    val set = EnumSet.noneOf(Material::class.java)
+    for (m in Material.values()) {
+        Material.IRON_BOOTS
+        val name = m.name
+        if (name.contains("_HELMET") || name.contains("_CHESTPLATE") || name.contains("_LEGGINGS") || name.contains("_BOOTS")) {
+            set += m
+        }
+    }
+    set
+}
+
+inline fun isWeapon(item: ItemStack): Boolean {
+    return item.type in weapon
+}
+
+inline fun isArmor(item: ItemStack): Boolean {
+    return item.type in armor
 }

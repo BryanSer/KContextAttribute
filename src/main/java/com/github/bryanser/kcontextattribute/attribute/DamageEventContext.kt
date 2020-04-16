@@ -8,6 +8,7 @@ class DamageEventContext(
         val event: EntityDamageByEntityEvent
 ) {
     var damage = event.damage
+    var termination = false
 
 }
 

@@ -75,6 +75,9 @@ object ContextManager : Listener {
         }
         val ctx = DamageEventContext(damctx, getContext(e), evt)
         for (attr in attributes) {
+            if(ctx.termination){
+                break
+            }
             if (attr is DamageAttribute) {
                 try {
                     attr.onDamage(ctx)
